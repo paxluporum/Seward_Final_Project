@@ -1,0 +1,6 @@
+export class GameOver {
+
+    update() {
+        
+    }
+}
