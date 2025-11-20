@@ -9,14 +9,27 @@ let toolbox = new Toolbox();
 
 
 //make some states to go to.
-let game = new Game();
-let gameOver = new GameOver();
-let titleScreen = new TitleScreen
+let game = new Game(canvas, pencil);
+let gameOver = new GameOver(canvas, pencil);
+let titleScreen = new TitleScreen(canvas, pencil);
 
 let state = titleScreen;
 
 function gameLoop() {
-    state.update();
+
+    pencil.clearRect(0, 0, canvas.width, canvas.height);
+
+    let command = state.update();
+
+    if(command == "titleScreen") {
+        state = titleScreen;
+    } 
+    if(command == "gameOver") {
+        state = gameOver;
+    }
+    if(command == "game") {
+        state == game;
+    }
 }
 
 setInterval(gameLoop, 1000 / 60);
