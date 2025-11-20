@@ -1,16 +1,19 @@
-export class TitleScreen {
+export class GameOver {
+
+      canvas;
+    pencil;
 
     constructor(canvas, pencil) {
         this.canvas = canvas;
         this.pencil = pencil;
     }
 
-
     update() {
-        console.log("In Title!")
+        console.log("In gameOver!")
         this.pencil.font = "20px Georgia";
-        this.pencil.fillText("Title Screen!", 10, 50);
-        this.pencil.font = "30px Verdana";
-
+        this.pencil.fillText("Game over", 10, 50);
     }
+
+
+
 }
