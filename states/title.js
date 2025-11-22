@@ -21,6 +21,9 @@ export class Title {
         this.onKeyPressed = this.onKeyPressed.bind(this);
         this.onClicked = this.onClicked.bind(this);
 
+        document.removeEventListener("keypress", this.onKeyPressed);
+        document.removeEventListener("click", this.onClicked);
+
         document.addEventListener("keypress", this.onKeyPressed )
         document.addEventListener("click", this.onClicked)
     }
