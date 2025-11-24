@@ -11,13 +11,13 @@ export class Game {
     constructor(canvas, pencil) {
         this.canvas = canvas;
         this.pencil = pencil;
-    
+
         this.player = new Player();
         this.player.x = canvas.width / 2;  // Center it perfectly
         this.player.y = canvas.height / 2;
 
         window.addEventListener("keydown", (e) => this.keys[e.key] = true);
-        window.addEventListener("keyup",   (e) => this.keys[e.key] = false);
+        window.addEventListener("keyup", (e) => this.keys[e.key] = false);
 
         this.rocks = new Rocks(canvas);
     }
@@ -33,7 +33,7 @@ export class Game {
         }
 
         // Movement
-        let speed = 4;   
+        let speed = 4;
 
         if (this.keys["ArrowUp"] || this.keys["w"]) {
             this.player.x += Math.sin(this.player.angle) * speed;
@@ -58,15 +58,28 @@ export class Game {
         //Top to bottom
         if (this.player.y > this.canvas.height) this.player.y = 0;
 
+        // Collision Detection: Ship vs Rocks (simple circle-circle for speed)
+        for (const rock of this.rocks.rocks) {
+            const dx = this.player.x - rock.x;
+            const dy = this.player.y - rock.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);  // Distance between centers
+
+            const minDistance = this.player.size + rock.radius;  // Combined "radii" (ship approx as circle)
+
+            if (distance < minDistance) {
+                return "gameOver";  // this is how you die :(
+            }
+        }
+
 
         console.log("In game!")
         this.pencil.font = "20px Georgia";
         this.pencil.fillText("Game", 10, 50);
 
-        this.player.update();   
+        this.player.update();
         this.player.draw(this.pencil);  //draws ship
 
-        this.rocks.update();      // ← does nothing yet, but safe
+        this.rocks.update();      //draws rocks
         this.rocks.draw(this.pencil);
     }
 
