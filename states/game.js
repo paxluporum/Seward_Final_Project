@@ -1,4 +1,5 @@
 import { Player } from "../player.js";
+import { Rocks } from "../rocks.js";
 
 export class Game {
 
@@ -17,6 +18,8 @@ export class Game {
 
         window.addEventListener("keydown", (e) => this.keys[e.key] = true);
         window.addEventListener("keyup",   (e) => this.keys[e.key] = false);
+
+        this.rocks = new Rocks(canvas);
     }
 
     update() {
@@ -62,6 +65,9 @@ export class Game {
 
         this.player.update();   
         this.player.draw(this.pencil);  //draws ship
+
+        this.rocks.update();      // ← does nothing yet, but safe
+        this.rocks.draw(this.pencil);
     }
 
 
