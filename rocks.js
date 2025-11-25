@@ -11,30 +11,54 @@ export class Rocks {
 
     // Spawn a bunch of rocks with random position and size
     spawnRocks(count) {
+        const safeCenterX = 300;  // Canvas center (player spawn)
+        const safeCenterY = 300;
+        const safeDistance = 100; // Buffer: rocks spawn at least 100px away
+
         for (let i = 0; i < count; i++) {
-            let rock = {
-                x: Math.random() * this.canvas.width,
-                y: Math.random() * this.canvas.height,
-                radius: 20 + Math.random() * 40,   // 20–60px radius
-                angle: Math.random() * Math.PI * 2, // Random rotation
+            let rock;
+            let attempts = 0;
+            const maxAttempts = 50;  // Safety net vs infinite loop
 
-            // Drift velocity (slow)
-                vx: (Math.random() - 0.5) * 1.5,   // -0.75 to +0.75 px/frame
-                vy: (Math.random() - 0.5) * 1.5,
-                points: []
-            };
+            while (attempts < maxAttempts) {
+                attempts++;
 
-            // Generate jagged shape ONCE<-this was a problem
-        const numPoints = 12;
-        for (let j = 0; j < numPoints; j++) {
-            const angle = (j / numPoints) * Math.PI * 2;
-            const variance = 0.8 + Math.random() * 0.4;
-            const r = rock.radius * variance;
-            rock.points.push({
-                x: Math.cos(angle) * r,
-                y: Math.sin(angle) * r
-            });
-        }
+                rock = {
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    radius: 20 + Math.random() * 40,
+                    angle: 0,  // Start flat, rotate in update()
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: (Math.random() - 0.5) * 1.5,
+                    points: [] // Pre-gen bumpy shape
+                };
+
+                // Generate points ONCE 
+                const numPoints = 12;
+                for (let j = 0; j < numPoints; j++) {
+                    const angle = (j / numPoints) * Math.PI * 2;
+                    const variance = 0.8 + Math.random() * 0.4;
+                    const r = rock.radius * variance;
+                    rock.points.push({
+                        x: Math.cos(angle) * r,
+                        y: Math.sin(angle) * r
+                    });
+                }
+
+                // Safe spawn check
+                const dx = rock.x - safeCenterX;
+                const dy = rock.y - safeCenterY;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance >= safeDistance) {
+                    break;  // Safe! Exit loop
+                }
+            }
+
+            // Rare fail? Spawn anyway (edge of screen)
+            if (attempts >= maxAttempts) {
+                console.warn("Safe spawn failed for rock " + i + " - spawning anyway");
+            }
 
             this.rocks.push(rock);
         }
@@ -58,27 +82,27 @@ export class Rocks {
     }
 
     // Draw all rocks — jagged
-   draw(pencil) {
-    for (const rock of this.rocks) {
-        pencil.save();
-        pencil.translate(rock.x, rock.y);
-        pencil.rotate(rock.angle);
+    draw(pencil) {
+        for (const rock of this.rocks) {
+            pencil.save();
+            pencil.translate(rock.x, rock.y);
+            pencil.rotate(rock.angle);
 
-        pencil.fillStyle = "#666";
-        pencil.strokeStyle = "#444";
-        pencil.lineWidth = 2;
+            pencil.fillStyle = "#666";
+            pencil.strokeStyle = "#444";
+            pencil.lineWidth = 2;
 
-        pencil.beginPath();
-        for (let i = 0; i < rock.points.length; i++) {
-            const p = rock.points[i];
-            if (i === 0) pencil.moveTo(p.x, p.y);
-            else pencil.lineTo(p.x, p.y);
+            pencil.beginPath();
+            for (let i = 0; i < rock.points.length; i++) {
+                const p = rock.points[i];
+                if (i === 0) pencil.moveTo(p.x, p.y);
+                else pencil.lineTo(p.x, p.y);
+            }
+            pencil.closePath();
+            pencil.fill();
+            pencil.stroke();
+
+            pencil.restore();
         }
-        pencil.closePath();
-        pencil.fill();
-        pencil.stroke();
-
-        pencil.restore();
     }
-}
 }
