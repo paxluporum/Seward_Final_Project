@@ -21,6 +21,7 @@ export class Game {
 
 
         this.rocks = new Rocks(canvas);
+        this.score = 0;  // Score counter
         this.minRocks = 5; //Minimum rocks on screen
         this.bullets = [];  // Array for bullets
         this.maxBullets = 3;  // Prevent spam
@@ -31,6 +32,12 @@ export class Game {
         // BLACK BACKGROUND (NEW)
         this.pencil.fillStyle = "black";
         this.pencil.fillRect(0, 0, this.canvas.width, this.canvas.height)
+
+        // SCORE DISPLAY (NEW)
+        this.pencil.fillStyle = "white";
+        this.pencil.font = "24px Georgia";
+        this.pencil.textAlign = "left";
+        this.pencil.fillText("Score: " + this.score, 10, 30);
 
         // Rotation
         if (this.keys["ArrowLeft"] || this.keys["a"]) {
@@ -123,6 +130,7 @@ export class Game {
                         // BULLET HITS ROCK – DESTROY BOTH
                         this.bullets.splice(b, 1);
                         this.rocks.rocks.splice(r, 1);
+                        this.score += 1;  // +1 point per rock destroyed
                         break;  // One bullet = one rock
                     }
                 }
