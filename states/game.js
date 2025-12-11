@@ -77,7 +77,7 @@ export class Game {
         if (this.keys[" "]) {  // SPACEBAR
             if (this.bullets.length < this.maxBullets) {
                 // Bullet spawns at ship nose
-                const bulletSpeed = 10;
+                const bulletSpeed = 6;
                 const bullet = {
                     x: this.player.x + Math.sin(this.player.angle) * this.player.size,
                     y: this.player.y - Math.cos(this.player.angle) * this.player.size,

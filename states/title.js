@@ -6,8 +6,8 @@ export class Title {
     changeToGame = false;
     toolbox = new Toolbox();
 
-    // Your original button coordinates — we keep them sacred
-    startButtonX = 300;
+    //button coordinates
+    startButtonX = 250;
     startButtonY = 200;
     startButtonW = 100;
     startButtonH = 50;
@@ -20,7 +20,7 @@ export class Title {
         this.canvas = canvas;
         this.pencil = pencil;
 
-        // YOUR ORIGINAL WORKING LISTENERS — NEVER TOUCHED AGAIN
+        // event listeners
         this.onKeyPressed = this.onKeyPressed.bind(this);
         this.onClicked   = this.onClicked.bind(this);
 
@@ -110,7 +110,7 @@ export class Title {
         this.pencil.fillText("WASD / Arrows • Space to shoot", this.canvas.width / 2, 480);
 
      if (this.changeToGame) {
-        this.changeToGame = false;   // ← NOW reset
+        this.changeToGame = false;   // reset
         return "game";
      }
     }
